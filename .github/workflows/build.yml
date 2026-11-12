@@ -1,0 +1,36 @@
+name: Build APK
+on:
+  push: { branches: [main, master] }
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "8.9" }
+      - name: Prepare signing key
+        env:
+          KS_B64: ${{ secrets.KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -z "$KS_B64" ] || [ -z "$KS_PASS" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "::error::Secrets missing (KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS). Build stopped so an APK with a wrong key is never produced."
+            exit 1
+          fi
+          echo "$KS_B64" | base64 -d > "$GITHUB_WORKSPACE/release.jks"
+          printf "storeFile=%s/release.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n" "$GITHUB_WORKSPACE" "$KS_PASS" "$KEY_ALIAS" "$KS_PASS" > keystore.properties
+      - name: Build
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: gradle assembleRelease --no-daemon
+      - name: Show signing fingerprint (must be identical every build)
+        run: keytool -printcert -jarfile app/build/outputs/apk/release/app-release.apk | grep -E 'SHA256|Owner'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Factorino-release-apk
+          path: app/build/outputs/apk/release/*.apk
