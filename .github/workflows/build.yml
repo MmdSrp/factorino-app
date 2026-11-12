@@ -13,6 +13,15 @@ jobs:
         run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: "8.9" }
+      - name: Download Vazirmatn font
+        run: |
+          mkdir -p app/src/main/assets/fonts
+          for W in Regular Bold; do
+            L=$(echo $W | tr 'A-Z' 'a-z')
+            curl -fsSL --retry 3 -o app/src/main/assets/fonts/vazir_$L.ttf "https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/fonts/ttf/Vazirmatn-$W.ttf" \
+              || curl -fsSL --retry 3 -o app/src/main/assets/fonts/vazir_$L.ttf "https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-$W.ttf"
+          done
+          ls -la app/src/main/assets/fonts
       - name: Prepare signing key
         env:
           KS_B64: ${{ secrets.KEYSTORE_BASE64 }}
