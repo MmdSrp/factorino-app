@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -16,12 +18,12 @@ android {
     // امضای نسخه‌ی نهایی: فایل keystore.properties را بسازید (راهنما در README)
     val ksFile = rootProject.file("keystore.properties")
     if (ksFile.exists()) {
-        val p = java.util.Properties().apply { load(ksFile.inputStream()) }
+        val p = Properties().apply { ksFile.inputStream().use { load(it) } }
         signingConfigs.create("release") {
-            storeFile = file(p["storeFile"] as String)
-            storePassword = p["storePassword"] as String
-            keyAlias = p["keyAlias"] as String
-            keyPassword = p["keyPassword"] as String
+            storeFile = file(p.getProperty("storeFile"))
+            storePassword = p.getProperty("storePassword")
+            keyAlias = p.getProperty("keyAlias")
+            keyPassword = p.getProperty("keyPassword")
         }
     }
     buildTypes {
