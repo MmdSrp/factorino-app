@@ -10,8 +10,8 @@ android {
         applicationId = "ir.shaerpour.factorino"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
+        versionName = "1.0." + (System.getenv("VERSION_CODE") ?: "1")
     }
     // امضای نسخه‌ی نهایی: فایل keystore.properties را بسازید (راهنما در README)
     val ksFile = rootProject.file("keystore.properties")
