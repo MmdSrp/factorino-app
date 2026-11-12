@@ -1,6 +1,6 @@
 package ir.shaerpour.factorino
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.content.Context
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -8,10 +8,20 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 
-val Vazir = FontFamily(
-    Font(R.font.vazir_regular, FontWeight.Normal),
-    Font(R.font.vazir_bold, FontWeight.Bold)
-)
+var Vazir: FontFamily = FontFamily.Default
+
+/** فونت از پوشه‌ی assets/fonts خوانده می‌شود؛ اگر نبود، فونت پیش‌فرض گوشی استفاده می‌شود و برنامه خطا نمی‌دهد. */
+fun initFonts(c: Context) {
+    try {
+        val l = c.assets.list("fonts")?.toList() ?: emptyList()
+        if ("vazir_regular.ttf" in l && "vazir_bold.ttf" in l) {
+            Vazir = FontFamily(
+                Font("fonts/vazir_regular.ttf", c.assets, FontWeight.Normal),
+                Font("fonts/vazir_bold.ttf", c.assets, FontWeight.Bold)
+            )
+        }
+    } catch (e: Exception) { }
+}
 
 private val DarkColors = darkColorScheme(
     primary = Color(0xFFF1F2F3), onPrimary = Color(0xFF141518),

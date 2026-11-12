@@ -136,7 +136,7 @@ import androidx.compose.ui.unit.sp
             } }
             item { Section("پیش‌نمایش") {
                 val ink = Color(0xFF1B1D20)
-                val ff = fontFamilies[font]
+                val ff = fontFamilies()[font]
                 Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color.White).border(2.dp, accColor, RoundedCornerShape(14.dp)).padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text("${typeNames[type]}  ${fa(no)}", color = accColor, fontWeight = FontWeight.Bold, fontFamily = ff, fontSize = (size + 4).sp)
                     Text("${d.settings.biz.ifBlank { "کسب‌وکار من" }}  ←  ${cName.ifBlank { "مشتری" }}", color = Color(0xFF6A7078), fontFamily = ff, fontSize = size.sp)

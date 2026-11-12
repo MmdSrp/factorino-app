@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 
 val CardShape = RoundedCornerShape(22.dp)
 val statusColors = listOf(Color(0xFFE5534B), Color(0xFFE0A030), Color(0xFF3FB27F))
-val fontFamilies = listOf(Vazir, androidx.compose.ui.text.font.FontFamily.Serif, androidx.compose.ui.text.font.FontFamily.Monospace)
+fun fontFamilies() = listOf(Vazir, androidx.compose.ui.text.font.FontFamily.Serif, androidx.compose.ui.text.font.FontFamily.Monospace)
 
 @Composable fun grayBrush() = Brush.linearGradient(listOf(Color(0xFF8A9099), Color(0xFF2A2C30)))
 

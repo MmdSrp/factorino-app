@@ -7,13 +7,12 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import androidx.core.content.FileProvider
-import androidx.core.content.res.ResourcesCompat
 import java.io.File
 
 private fun face(c: Context, font: Int, bold: Boolean): Typeface = when (font) {
     1 -> Typeface.create(Typeface.SERIF, if (bold) Typeface.BOLD else Typeface.NORMAL)
     2 -> Typeface.create(Typeface.MONOSPACE, if (bold) Typeface.BOLD else Typeface.NORMAL)
-    else -> ResourcesCompat.getFont(c, if (bold) R.font.vazir_bold else R.font.vazir_regular) ?: Typeface.DEFAULT
+    else -> try { Typeface.createFromAsset(c.assets, if (bold) "fonts/vazir_bold.ttf" else "fonts/vazir_regular.ttf") } catch (e: Exception) { Typeface.DEFAULT }
 }
 
 fun makePdf(c: Context, v: Invoice, s: Settings): File {
